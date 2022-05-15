@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Gives a dmenu prompt to search Google
+# Without input, will open Google.com.
+# Anything else, it search it.h
+
+[ -z "$LAUNCHER" ] && LAUNCHER="dmenu -l 5 -i -p "
+
+[ -z "${DISPLAY}" ] && LAUNCHER="fzf --prompt "
+
+localBROWSER="$BROWSER "
+[ -n "$*" ] && localBROWSER="$*"
+[ -z "${DISPLAY}" ] && localBROWSER="start "
+
+if [ -f ~/.config/browser/bookmarks ]; then
+	choice=$( (echo " " && cat ~/.config/browser/bookmarks) | $LAUNCHER"Search: ") || exit 1
+else
+	choice=$(echo " " | $LAUNCHER -i --prompt "Search Google: ") || exit 1
+fi
+
+case "$choice" in
+    **)
+	$localBROWSER"https://google.com"
+	exit
+	;;
+    http*)
+	$localBROWSER"$(echo $choice | awk '{print $1}')"
+	exit
+	;;
+    *) $localBROWSER"https://google.com/?q=$choice"
+       exit
+       ;;
+esac
+#vim:ft=sh
