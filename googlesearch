@@ -4,16 +4,16 @@
 # Without input, will open Google.com.
 # Anything else, it search it.h
 
-[ -z "$LAUNCHER" ] && LAUNCHER="dmenu -l 5 -i -p "
+[ -z "$LAUNCHER" ] && LAUNCHER="rofi -dmenu -l 5 -i -p "
 
 [ -z "${DISPLAY}" ] && LAUNCHER="fzf --prompt "
 
-localBROWSER="$BROWSER "
+localBROWSER="xdg-open "
 [ -n "$*" ] && localBROWSER="$*"
 [ -z "${DISPLAY}" ] && localBROWSER="start "
 
 if [ -f ~/.config/browser/bookmarks ]; then
-	choice=$( (echo " " && cat ~/.config/browser/bookmarks) | $LAUNCHER"Search: ") || exit 1
+	choice=$( (echo " " && cat ~/.config/browser/bookmarks) | $LAUNCHER"Search") || exit 1
 else
 	choice=$(echo " " | $LAUNCHER -i --prompt "Search Google: ") || exit 1
 fi
